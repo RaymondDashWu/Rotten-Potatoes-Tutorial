@@ -1,14 +1,12 @@
-const express = require('express')
-const app = express()
+//import reviews from 'reviews';
+const reviews = require("./controllers/reviews");
+const Review = require("./models/review")
+
+const express = require('express');
+const app = express();
 const mongoose = require('mongoose');
 const methodOverride = require('method-override')
 mongoose.connect('mongodb://localhost/rotten-potatoes', { useMongoClient: true });
-
-const Review = mongoose.model('Review', {
-    title: String,
-    description: String,
-    movieTitle: String
-});
 
 var exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
@@ -16,7 +14,7 @@ const bodyParser = require('body-parser');
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(methodOverride('_method'))
+app.use(methodOverride('_method'));
 
 
 app.get('/', (req, res) => {
@@ -36,7 +34,7 @@ app.get('/reviews/:id', (req, res) => {
       }).catch((err) => {
         console.log(err.message);
       })
-})
+});
 
 app.put('/reviews/:id', (req, res) => {
     Review.findByIdAndUpdate(req.params.id, req.body)
@@ -46,17 +44,17 @@ app.put('/reviews/:id', (req, res) => {
         .catch(err => {
           console.log(err.message)
         })
-})
+});
 
 app.get('/reviews/:id/edit', function (req, res) {
     Review.findById(req.params.id, function(err, review) {
         res.render('reviews-edit', {review: review});
     })
-})
+});
 
 app.get('/reviews/new', (req, res) => {
-    res.render('reviews-new', {})
-})
+    res.render('reviews-new', {});
+});
 
 app.post('/reviews', (req, res) => {
     Review.create(req.body).then((review) => {
@@ -65,7 +63,7 @@ app.post('/reviews', (req, res) => {
     }).catch((err) => {
         console.log(err.message)
     })
-})
+});
 
 app.delete('/reviews/:id', function (req, res) {
     console.log("DELETE review")

@@ -1,22 +1,10 @@
-<form method = "POST" action = "/reviews">
-    {{> reviews-form}}
-    <fieldset>
-        <legend>New Review</legend>
-        <p>
-            <label for = "review-title">Review Title</label><br>
-            <input id = "review-title" type = "text" name = "title" />
-        </p>
-        <p>
-            <label for = "movie-title">Movie Title</label><br>
-            <input id = "movie-title" type = "text" name = "movieTitle" />
-        </p>
-        <p>
-            <label for = "description-text">Description</label><br>
-            <textarea id = "description-text" type = "text" name = "description" /></textarea>
-        </p>
-    </fieldset>
-
-    <p>
-        <button type = "submit">Save Review</button>
-    </p>
-</form>
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <form method="POST" action="/reviews">
+            {{> reviews-form}}
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Save Review</button>
+            </div>
+        </form>
+    </div>
+</div>
