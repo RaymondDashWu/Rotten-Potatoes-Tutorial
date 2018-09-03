@@ -30,6 +30,14 @@ app.get('/', (req, res) => {
     //res.render('home', {msg: 'Hello World!'});
 });
 
+app.get('/reviews/:id', (req, res) => {
+    Review.findById(req.params.id).then((review) => {
+        res.render('reviews-show', { review: review })
+      }).catch((err) => {
+        console.log(err.message);
+      })
+})
+
 app.put('/reviews/:id', (req, res) => {
     Review.findByIdAndUpdate(req.params.id, req.body)
         .then(review => {
