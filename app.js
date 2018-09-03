@@ -5,11 +5,12 @@ const Review = require("./models/review")
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const methodOverride = require('method-override')
-mongoose.connect('mongodb://localhost/rotten-potatoes', { useMongoClient: true });
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/rotten-potatoes', { useMongoClient: true });
 
 var exphbs = require('express-handlebars');
-const bodyParser = require('body-parser');
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -28,21 +29,38 @@ app.get('/', (req, res) => {
     //res.render('home', {msg: 'Hello World!'});
 });
 
+app.get('/reviews/new', (req, res) => {
+    res.render('reviews-new', {});
+});
+
 app.get('/reviews/:id', (req, res) => {
-    Review.findById(req.params.id).then((review) => {
-        res.render('reviews-show', { review: review })
-      }).catch((err) => {
-        console.log(err.message);
-      })
+    Review.findById(req.params.id)
+        .then(review => {
+            res.render('reviews-show', { review: review })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
+
+app.post('/reviews', (req, res) => {
+    Review.create(req.body)
+        .then((review) => {
+            //console.log(review);
+            res.redirect(`/reviews/${review._id}`);
+        })
+        .catch((err) => {
+            console.log(err.message)
+    })
 });
 
 app.put('/reviews/:id', (req, res) => {
     Review.findByIdAndUpdate(req.params.id, req.body)
         .then(review => {
-          res.redirect(`/reviews/${review._id}`)
+            res.redirect(`/reviews/${review._id}`)
         })
         .catch(err => {
-          console.log(err.message)
+            console.log(err.message)
         })
 });
 
@@ -52,18 +70,9 @@ app.get('/reviews/:id/edit', function (req, res) {
     })
 });
 
-app.get('/reviews/new', (req, res) => {
-    res.render('reviews-new', {});
-});
 
-app.post('/reviews', (req, res) => {
-    Review.create(req.body).then((review) => {
-        console.log(review);
-        res.redirect('/reviews/${review._id}');
-    }).catch((err) => {
-        console.log(err.message)
-    })
-});
+
+
 
 app.delete('/reviews/:id', function (req, res) {
     console.log("DELETE review")
@@ -74,7 +83,7 @@ app.delete('/reviews/:id', function (req, res) {
     })
 })
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('App listening on port 3000!')
 })
 
