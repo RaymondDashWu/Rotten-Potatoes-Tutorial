@@ -1,13 +1,12 @@
 //import reviews from 'reviews';
+
 const reviews = require("./controllers/reviews");
 const Review = require("./models/review");
-
 const Comment = require('./models/comment')
-
+const comments = require('./controllers/comments');
 
 const express = require('express');
 const app = express();
-const comments = require('./controllers/comments')(app, Comment);
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override')
 
@@ -20,7 +19,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-
+comments(app, Comment);
 
 app.get('/', (req, res) => {
     Review.find()
@@ -101,6 +100,7 @@ app.delete('/reviews/:id', function (req, res) {
     })
 })
 
+//SERVER START
 app.listen(process.env.PORT || 3000, () => {
     console.log('App listening on port 3000!')
 })
