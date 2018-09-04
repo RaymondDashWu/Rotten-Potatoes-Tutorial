@@ -1,16 +1,20 @@
 //import reviews from 'reviews';
 const reviews = require("./controllers/reviews");
-const Review = require("./models/review")
+const Review = require("./models/review");
+
+const Comment = require('./models/comment')
+
 
 const express = require('express');
 const app = express();
+const comments = require('./controllers/comments')(app, Comment);
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override')
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/rotten-potatoes', {useNewUrlParser: true});
 
-var exphbs = require('express-handlebars');
+const exphbs = require('express-handlebars');
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -29,20 +33,6 @@ app.get('/', (req, res) => {
     //res.render('home', {msg: 'Hello World!'});
 });
 
-app.get('/reviews/new', (req, res) => {
-    res.render('reviews-new', {});
-});
-
-app.get('/reviews/:id', (req, res) => {
-    Review.findById(req.params.id)
-        .then(review => {
-            res.render('reviews-show', { review: review })
-        })
-        .catch(err => {
-            console.log(err);
-        })
-});
-
 app.post('/reviews', (req, res) => {
     Review.create(req.body)
         .then((review) => {
@@ -52,6 +42,34 @@ app.post('/reviews', (req, res) => {
         .catch((err) => {
             console.log(err.message)
     })
+});
+
+app.get('/reviews/new', (req, res) => {
+    res.render('reviews-new', {});
+});
+
+app.get('/reviews/:id', (req, res) => {
+    Review.findById(req.params.id)
+        .then(review => {
+            Comment.find({reviewId: req.params.id})
+                .then(comments => {
+                    res.render('reviews-show', {review: review, comments: comments})
+                })
+        })
+        .catch((err) => {
+            console.log(err.message);
+        })
+});
+
+app.delete('/reviews/comments/:id', function (req, res) {
+    console.log("DELETE comment")
+    Comment.findByIdAndRemove(req.params.id)
+        .then((comment) => {
+            res.redirect(`/reviews/${comment.reviewId}`)
+        })
+        .catch((err) => {
+            console.log(err.message)
+        })
 });
 
 app.put('/reviews/:id', (req, res) => {
