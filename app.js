@@ -4,21 +4,27 @@ const reviews = require("./controllers/reviews");
 const Review = require("./models/review");
 const Comment = require('./models/comment')
 const comments = require('./controllers/comments');
-
-const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override')
-
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/rotten-potatoes', {useNewUrlParser: true});
-
+const express = require('express');
 const exphbs = require('express-handlebars');
+
+const app = express();
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/rotten-potatoes', {useNewUrlParser: true})
+.then(() => {
+    console.log("Connected to DB");
+})
+.catch( err => {
+    throw err;
+})
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+
 comments(app, Comment);
 
 app.get('/', (req, res) => {
@@ -110,3 +116,6 @@ app.listen(process.env.PORT || 3000, () => {
 //  { title: "Next Review" },
 //  { title: "TERRIBLE REVIEW"}
 //]
+
+module.exports = app
+
