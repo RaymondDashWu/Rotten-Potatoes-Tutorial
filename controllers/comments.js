@@ -14,10 +14,19 @@ module.exports = function (app, Comment) {
 //         //res.send('reviews comment')
 //   })
 
+// app.post('/reviews/comments', (req, res) => {
+//     Comment.create(req.body).then(comment => {
+//       res.status(200).send({ comment: comment });
+//     }).catch((err) => {
+//       res.status(400).send({ err: err })
+//     })
+//   })
+
 app.post('/movies/:movieId/reviews/:id/comments', (req, res) => {
+    console.log(req.body)
     Comment.create(req.body)
         .then(comment => {
-            res.status(200).send({comment:commment});
+            res.status(200).send({comment:comment});
         })
         .catch((err) => {
             res.status(400).send({err:err})

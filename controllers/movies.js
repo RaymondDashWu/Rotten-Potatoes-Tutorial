@@ -17,6 +17,7 @@ function movies (app) {
   app.get('/movies/:id', (req, res) => {
     moviedb.movieInfo({ id: req.params.id }).then(movie => {
       Review.find({ movieId: req.params.id }).then(reviews => {
+        console.log(movie)
         res.render('movies-show', { movie: movie, reviews: reviews });
         // console.log(movie)
       })

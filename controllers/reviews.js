@@ -79,7 +79,7 @@ function reviews (app) {
             .then(review => {
                 Comment.find({reviewId: req.params.id})
                     .then(comments => {
-                        res.render('reviews-show', {review: review, comments: comments})
+                        res.render('reviews-show', {review: review, comments: comments.reverse()})
                     })
             })
             .catch((err) => {

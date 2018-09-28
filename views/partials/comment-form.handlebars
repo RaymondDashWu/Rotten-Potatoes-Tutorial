@@ -1,5 +1,5 @@
-<form action = "/movies/{{review.movieId}}/reviews/{{review._id}}/comments" method = "POST">
-    <input type = "hidden" value = "{{review._id}}" name = "reviewId">
+<form id = "comment-form" action = "/movies/{{review.movieId}}/reviews/{{review._id}}/comments" method = "POST" onsubmit = "event.preventDefault();addComment();">
+    <input class = "form-control" id="reviewId" type = "hidden" value = "{{review._id}}" name = "reviewId">
     <fieldset>
         <legend>Add a Comment</legend>
         <div class = "form-group">
