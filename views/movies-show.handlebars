@@ -4,9 +4,10 @@
         <h1>{{movie.title}}</h1>
         <p>{{movie.overview}}</p>
         <div class="trailer-box">
-            <iframe class="movie-trailer" src="https://www.youtube.com/embed/Almv77VBecc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <iframe class="movie-trailer" src="https://www.youtube.com/embed/{{movie.trailer_youtube_id}}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         <div class="reviews">
+            <a href = "/movies/{{movie.id}}/reviews/new" class = "btn btn-primary">Write Review</a>
             <h3>Reviews</h3>
             {{#each reviews}}
                 {{> review}}
