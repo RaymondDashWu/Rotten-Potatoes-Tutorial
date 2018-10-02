@@ -10,6 +10,7 @@ const methodOverride = require('method-override')
 const mongoose = require('mongoose');
 const express = require('express');
 const exphbs = require('express-handlebars');
+const admin = require('./controllers/admin.js')
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(express.static('public'));
 comments(app, Comment);
 movies(app);
 reviews(app);
+admin(app);
 
 // app.get('/', (req, res) => {
 //     Review.find()
